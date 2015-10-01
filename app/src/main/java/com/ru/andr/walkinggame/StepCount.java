@@ -14,6 +14,8 @@ import android.widget.TextView;
 public class StepCount extends AppCompatActivity implements SensorEventListener {
 
     private TextView textView;
+    private TextView levelText;
+    private TextView nextLevelText;
 
     private SensorManager mSenssorManager;
 
@@ -21,15 +23,27 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
 
     private Sensor mStepDetectorSensor;
 
+    private int mStepsTaken;
+    private int level;
+
+    private Player player;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_count);
         textView = (TextView)findViewById(R.id.textview);
+        levelText = (TextView)findViewById(R.id.leveltext);
+        nextLevelText = (TextView)findViewById(R.id.tonextlevel);
 
         mSenssorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
         mStepDetectorSensor = mSenssorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
         mStepCountSensor = mSenssorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+
+        level = 1;
+        player = new Player();
+
+        levelText.setText("LVL: " + level);
     }
 
     @Override
@@ -82,10 +96,15 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
         }
 
         if (sensor.getType() == Sensor.TYPE_STEP_COUNTER){
-            textView.setText("Step counter detected : " + value);
-        }else if (sensor.getType() == Sensor.TYPE_STEP_DETECTOR){
+            textView.setText("EXP:  : " + player.getEXP());
+            player.addEXP(value - mStepsTaken);
+            mStepsTaken = value;
+            levelText.setText("LVL: " + player.getLevel());
+            nextLevelText.setText("EXP to LVL: " + player.getExpToNextLevel());
+
+        }/*else if (sensor.getType() == Sensor.TYPE_STEP_DETECTOR){
             textView.setText("Step detector detected : " + value);
-        }
+        }*/
 
     }
 
