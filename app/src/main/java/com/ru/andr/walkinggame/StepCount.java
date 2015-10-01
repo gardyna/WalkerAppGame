@@ -12,12 +12,26 @@ import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.YAxisValueFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
+import java.text.DecimalFormat;
+import java.text.Format;
+import java.util.ArrayList;
+
 public class StepCount extends AppCompatActivity implements SensorEventListener {
 
     private TextView textView;
     private TextView levelText;
     private TextView nextLevelText;
+
     private ProgressBar levelProgress;
+    private BarChart mStatChart;
 
     private SensorManager mSenssorManager;
 
@@ -38,6 +52,34 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
         levelText = (TextView)findViewById(R.id.leveltext);
         nextLevelText = (TextView)findViewById(R.id.tonextlevel);
         levelProgress = (ProgressBar)findViewById(R.id.progressBar);
+        mStatChart = (BarChart)findViewById(R.id.chart);
+        mStatChart.setAutoScaleMinMaxEnabled(false);
+        mStatChart.setTouchEnabled(false);
+        mStatChart.setDrawGridBackground(false);
+        mStatChart.setDescription("");
+        mStatChart.getLegend().setFormSize(0);
+        mStatChart.getAxisLeft().setDrawLabels(false);
+        mStatChart.getAxisRight().setDrawLabels(false);
+
+        // test for chart
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        entries.add(new BarEntry(4f, 0));
+        entries.add(new BarEntry(1f, 1));
+        entries.add(new BarEntry(5f, 2));
+        entries.add(new BarEntry(3f, 3));
+
+        ArrayList<String> labels = new ArrayList<String>();
+        labels.add("STR");
+        labels.add("PER");
+        labels.add("END");
+        labels.add("CHA");
+
+        BarDataSet dataset = new BarDataSet(entries, "");
+        dataset.setColors(ColorTemplate.COLORFUL_COLORS);
+        BarData data = new BarData(labels, dataset);
+        data.setValueTextSize(14);
+        mStatChart.setData(data);
+
 
         mSenssorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
         mStepDetectorSensor = mSenssorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
