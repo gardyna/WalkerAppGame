@@ -12,4 +12,5 @@
     <string name="step_detector">
          android.hardware.sensor.stepdetector
    </string>
+    <string name="title_activity_levelup">Levelup</string>
 </resources>

@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -29,7 +31,7 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
     private TextView textView;
     private TextView levelText;
     private TextView nextLevelText;
-
+    private Button mLevelUpButton;
     private ProgressBar levelProgress;
     private BarChart mStatChart;
 
@@ -44,16 +46,11 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
 
     private Player player;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_step_count);
-        textView = (TextView)findViewById(R.id.textview);
-        levelText = (TextView)findViewById(R.id.leveltext);
-        nextLevelText = (TextView)findViewById(R.id.tonextlevel);
-        levelProgress = (ProgressBar)findViewById(R.id.progressBar);
-        mStatChart = (BarChart)findViewById(R.id.chart);
-        mStatChart.setAutoScaleMinMaxEnabled(false);
+    boolean firstStart = true;
+
+    private void setmStatChart(){
+        //TODO: make implementation reading values from player class
+        mStatChart.setAutoScaleMinMaxEnabled(true);
         mStatChart.setTouchEnabled(false);
         mStatChart.setDrawGridBackground(false);
         mStatChart.setDescription("");
@@ -63,30 +60,48 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
 
         // test for chart
         ArrayList<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(4f, 0));
+        entries.add(new BarEntry(player.getSTR(), 0));
         entries.add(new BarEntry(1f, 1));
         entries.add(new BarEntry(5f, 2));
         entries.add(new BarEntry(3f, 3));
 
         ArrayList<String> labels = new ArrayList<String>();
-        labels.add("STR");
-        labels.add("PER");
-        labels.add("END");
-        labels.add("CHA");
+        labels.add("Strength");
+        labels.add("Speed");
+        labels.add("Agility");
+        labels.add("Intelligence");
 
         BarDataSet dataset = new BarDataSet(entries, "");
         dataset.setColors(ColorTemplate.COLORFUL_COLORS);
         BarData data = new BarData(labels, dataset);
         data.setValueTextSize(14);
         mStatChart.setData(data);
+        mStatChart.invalidate();
 
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_step_count);
+        player = new Player(this);
+        textView = (TextView)findViewById(R.id.textview);
+        levelText = (TextView)findViewById(R.id.leveltext);
+        nextLevelText = (TextView)findViewById(R.id.tonextlevel);
+        levelProgress = (ProgressBar)findViewById(R.id.progressBar);
+        mLevelUpButton = (Button)findViewById(R.id.button);
+        mStatChart = (BarChart)findViewById(R.id.chart);
+        setmStatChart();
+
+        mLevelUpButton.setVisibility(View.INVISIBLE);
+        mLevelUpButton.setClickable(false);
 
         mSenssorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
         mStepDetectorSensor = mSenssorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
         mStepCountSensor = mSenssorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
 
         level = 1;
-        player = new Player();
+
 
         levelText.setText("LVL: " + level);
     }
@@ -142,17 +157,24 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
 
         if (sensor.getType() == Sensor.TYPE_STEP_COUNTER){
             textView.setText("EXP:  : " + player.getEXP());
+            if (firstStart){
+                mStepsTaken = value;
+            }
             player.addEXP(value - mStepsTaken);
             mStepsTaken = value;
             levelText.setText("LVL: " + player.getLevel());
             nextLevelText.setText("EXP to LVL: " + player.getExpToNextLevel());
             levelProgress.setMax(player.getExpToNextLevel());
             levelProgress.setProgress(player.getEXP());
-
+            setmStatChart();
+            if(player.getCanLevelUpTimes() != 0){
+                mLevelUpButton.setVisibility(View.VISIBLE);
+                mLevelUpButton.setClickable(true);
+            }
         }/*else if (sensor.getType() == Sensor.TYPE_STEP_DETECTOR){
             textView.setText("Step detector detected : " + value);
         }*/
-
+        firstStart = false;
     }
 
     @Override
