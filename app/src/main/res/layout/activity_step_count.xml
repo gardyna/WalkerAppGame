@@ -48,7 +48,8 @@
         android:text="Level up!"
         android:id="@+id/button"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:onClick="StartLevelUp"/>
 
 
 </RelativeLayout>

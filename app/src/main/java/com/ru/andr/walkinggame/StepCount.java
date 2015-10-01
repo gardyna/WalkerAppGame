@@ -1,6 +1,7 @@
 package com.ru.andr.walkinggame;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -84,7 +85,7 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_count);
-        player = new Player(this);
+        player = Player.getPlayer(this);
         textView = (TextView)findViewById(R.id.textview);
         levelText = (TextView)findViewById(R.id.leveltext);
         nextLevelText = (TextView)findViewById(R.id.tonextlevel);
@@ -131,11 +132,17 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
     @Override
     protected void onResume(){
         super.onResume();
-
+        player = Player.getPlayer(this);
         mSenssorManager.registerListener(this, mStepCountSensor,
                 SensorManager.SENSOR_DELAY_FASTEST);
         mSenssorManager.registerListener(this, mStepDetectorSensor,
                 SensorManager.SENSOR_DELAY_FASTEST);
+    }
+
+    public void StartLevelUp(View v){
+        player.Save();
+        Intent i = new Intent(this, Levelup.class);
+        startActivity(i);
     }
 
     @Override
@@ -144,6 +151,13 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
         mSenssorManager.unregisterListener(this, mStepDetectorSensor);
         mSenssorManager.unregisterListener(this, mStepCountSensor);
     }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        player.Save();
+    }
+
 
     @Override
     public void onSensorChanged(SensorEvent event) {

@@ -1,16 +1,25 @@
 package com.ru.andr.walkinggame;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 public class Levelup extends AppCompatActivity {
+    TextView canLevelText;
+    Player player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_levelup);
+        player = Player.getPlayer(this);
+        canLevelText = (TextView)findViewById(R.id.LevelTimes);
+
+        canLevelText.setText("You can level " + player.getCanLevelUpTimes() + " times");
     }
 
     @Override
@@ -33,5 +42,19 @@ public class Levelup extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void IncStrength(View v){
+        player.incSTR();
+        player.Save();
+        canLevelText.setText("You can level " + player.getCanLevelUpTimes() + " times");
+        checkGoBack();
+    }
+
+    private void checkGoBack(){
+        if (player.getCanLevelUpTimes() <= 0){
+            Intent i = new Intent(this, StepCount.class);
+            startActivity(i);
+        }
     }
 }
