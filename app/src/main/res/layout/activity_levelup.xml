@@ -22,15 +22,74 @@
         android:text="Strength"
         android:layout_below="@+id/textView"
         android:layout_alignParentStart="true"
-        android:onClick="IncStrength"
-        android:id="@+id/button2" />
+        android:onClick="IncStat"
+        android:id="@+id/StrengthButton" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Speed"
-        android:onClick="IncSpeed"
-        android:layout_below="@+id/button2"
+        android:onClick="IncStat"
+        android:layout_below="@+id/StrengthButton"
+        android:layout_alignParentStart="true"
+        android:id="@+id/SpeedButton" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Intelligence"
+        android:onClick="IncStat"
+        android:id="@+id/IntelligenceButton"
+        android:layout_below="@+id/SpeedButton"
         android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Agility"
+        android:onClick="IncStat"
+        android:id="@+id/AgilityButton"
+        android:layout_below="@+id/IntelligenceButton"
+        android:layout_alignParentStart="true" />
+
+    <!-- region statInfo -->
+    <TextView
+        android:id="@+id/strengthText"
+        android:text="Strength: ??"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/StrengthButton"
+        android:layout_alignParentEnd="true"
+        android:textSize="20dp"/>
+
+    <TextView
+        android:id="@+id/speedText"
+        android:text="Speed: ??"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/SpeedButton"
+        android:layout_alignEnd="@+id/strengthText"
+        android:textSize="20dp"/>
+
+    <TextView
+        android:id="@+id/IntelligenceText"
+        android:text="Speed: ??"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/IntelligenceButton"
+        android:layout_alignEnd="@+id/strengthText"
+        android:textSize="20dp"/>
+
+    <TextView
+        android:id="@+id/AgilityText"
+        android:text="Speed: ??"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/AgilityButton"
+        android:layout_alignEnd="@+id/strengthText"
+        android:textSize="20dp"/>
+
+    <!-- endregion -->
+
 
 </RelativeLayout>

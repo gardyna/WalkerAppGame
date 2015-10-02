@@ -10,13 +10,12 @@ import android.widget.TextView;
 
 public class Levelup extends AppCompatActivity {
     TextView canLevelText;
-    Player player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_levelup);
-        player = Player.getPlayer(this);
+        Player player = Player.getPlayer(this);
         canLevelText = (TextView)findViewById(R.id.LevelTimes);
 
         canLevelText.setText("You can level " + player.getCanLevelUpTimes() + " times");
@@ -44,15 +43,24 @@ public class Levelup extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void IncStrength(View v){
-        player.incStrength();
-        player.Save();
-        canLevelText.setText("You can level " + player.getCanLevelUpTimes() + " times");
-        checkGoBack();
-    }
-
-    public void IncSpeed(View v){
-        player.incSpeed();
+    public void IncStat(View v){
+        Player player = Player.getPlayer(this);
+        // stat increase
+        switch (v.getId()){
+            case R.id.StrengthButton:
+                player.incStrength();
+                break;
+            case R.id.SpeedButton:
+                player.incSpeed();
+                break;
+            case R.id.IntelligenceButton:
+                player.incIntelligence();
+                break;
+            case R.id.AgilityButton:
+                player.incAgility();
+                break;
+        }
+        //save
         player.Save();
         canLevelText.setText("You can level " + player.getCanLevelUpTimes() + " times");
         checkGoBack();
@@ -61,6 +69,7 @@ public class Levelup extends AppCompatActivity {
 
 
     private void checkGoBack(){
+        Player player = Player.getPlayer(this);
         if (player.getCanLevelUpTimes() <= 0){
             Intent i = new Intent(this, StepCount.class);
             startActivity(i);
