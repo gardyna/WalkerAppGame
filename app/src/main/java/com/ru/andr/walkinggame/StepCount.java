@@ -2,6 +2,7 @@ package com.ru.andr.walkinggame;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -16,15 +17,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
-import java.text.DecimalFormat;
-import java.text.Format;
 import java.util.ArrayList;
 
 public class StepCount extends AppCompatActivity implements SensorEventListener {
@@ -61,12 +58,12 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
 
         // test for chart
         ArrayList<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(player.getSTR(), 0));
-        entries.add(new BarEntry(1f, 1));
+        entries.add(new BarEntry(player.getStrength(), 0));
+        entries.add(new BarEntry(player.getSpeed(), 1));
         entries.add(new BarEntry(5f, 2));
         entries.add(new BarEntry(3f, 3));
 
-        ArrayList<String> labels = new ArrayList<String>();
+        ArrayList<String> labels = new ArrayList<>();
         labels.add("Strength");
         labels.add("Speed");
         labels.add("Agility");
@@ -85,6 +82,7 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_count);
+
         player = Player.getPlayer(this);
         textView = (TextView)findViewById(R.id.textview);
         levelText = (TextView)findViewById(R.id.leveltext);
@@ -148,8 +146,8 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
     @Override
     protected void onStop(){
         super.onStop();
-        mSenssorManager.unregisterListener(this, mStepDetectorSensor);
-        mSenssorManager.unregisterListener(this, mStepCountSensor);
+        //mSenssorManager.unregisterListener(this, mStepDetectorSensor);
+        //mSenssorManager.unregisterListener(this, mStepCountSensor);
     }
 
     @Override

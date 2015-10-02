@@ -45,11 +45,20 @@ public class Levelup extends AppCompatActivity {
     }
 
     public void IncStrength(View v){
-        player.incSTR();
+        player.incStrength();
         player.Save();
         canLevelText.setText("You can level " + player.getCanLevelUpTimes() + " times");
         checkGoBack();
     }
+
+    public void IncSpeed(View v){
+        player.incSpeed();
+        player.Save();
+        canLevelText.setText("You can level " + player.getCanLevelUpTimes() + " times");
+        checkGoBack();
+    }
+
+
 
     private void checkGoBack(){
         if (player.getCanLevelUpTimes() <= 0){
