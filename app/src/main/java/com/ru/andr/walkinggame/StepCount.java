@@ -60,8 +60,8 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
         ArrayList<BarEntry> entries = new ArrayList<>();
         entries.add(new BarEntry(player.getStrength(), 0));
         entries.add(new BarEntry(player.getSpeed(), 1));
-        entries.add(new BarEntry(5f, 2));
-        entries.add(new BarEntry(3f, 3));
+        entries.add(new BarEntry(player.getAgility(), 2));
+        entries.add(new BarEntry(player.getInteligence(), 3));
 
         ArrayList<String> labels = new ArrayList<>();
         labels.add("Strength");
@@ -101,7 +101,11 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
 
         level = 1;
 
-
+        /* comment or uncomment for testing leveling methods
+        if(player.getCanLevelUpTimes() <= 0){
+            player.addEXP(99999999);
+        }
+        */
         levelText.setText("LVL: " + level);
     }
 
