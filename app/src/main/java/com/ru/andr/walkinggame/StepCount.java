@@ -33,14 +33,13 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
     private ProgressBar levelProgress;
     private BarChart mStatChart;
 
-    private SensorManager mSenssorManager;
+    private SensorManager sensorManager;
 
     private Sensor mStepCountSensor;
 
     private Sensor mStepDetectorSensor;
 
     private int mStepsTaken;
-    private int level;
 
     private Player player;
 
@@ -95,18 +94,20 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
         mLevelUpButton.setVisibility(View.INVISIBLE);
         mLevelUpButton.setClickable(false);
 
-        mSenssorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
-        mStepDetectorSensor = mSenssorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
-        mStepCountSensor = mSenssorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        // uncomment to clear info
+        //getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().clear().commit();
 
-        level = 1;
+        sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
+        mStepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        mStepCountSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+
 
         /* comment or uncomment for testing leveling methods
         if(player.getCanLevelUpTimes() <= 0){
             player.addEXP(99999999);
         }
         */
-        levelText.setText("LVL: " + level);
+        levelText.setText("LVL: " + player.getLevel());
     }
 
     @Override
@@ -135,9 +136,9 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
     protected void onResume(){
         super.onResume();
         player = Player.getPlayer(this);
-        mSenssorManager.registerListener(this, mStepCountSensor,
+        sensorManager.registerListener(this, mStepCountSensor,
                 SensorManager.SENSOR_DELAY_FASTEST);
-        mSenssorManager.registerListener(this, mStepDetectorSensor,
+        sensorManager.registerListener(this, mStepDetectorSensor,
                 SensorManager.SENSOR_DELAY_FASTEST);
     }
 
@@ -150,8 +151,8 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
     @Override
     protected void onStop(){
         super.onStop();
-        //mSenssorManager.unregisterListener(this, mStepDetectorSensor);
-        //mSenssorManager.unregisterListener(this, mStepCountSensor);
+        //sensorManager.unregisterListener(this, mStepDetectorSensor);
+        //sensorManager.unregisterListener(this, mStepCountSensor);
     }
 
     @Override
