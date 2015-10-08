@@ -13,4 +13,8 @@
          android.hardware.sensor.stepdetector
    </string>
     <string name="title_activity_levelup">Levelup</string>
+    <string name="title_activity_login">LoginActivity</string>
+
+    <string name="text_btn_login">Login</string>
+    <string name="text_btn_register">Register</string>
 </resources>
