@@ -2,7 +2,6 @@ package com.ru.andr.walkinggame;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -46,7 +45,6 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
     boolean firstStart = true;
 
     private void setmStatChart(){
-        //TODO: make implementation reading values from player class
         mStatChart.setAutoScaleMinMaxEnabled(true);
         mStatChart.setTouchEnabled(false);
         mStatChart.setDrawGridBackground(false);
@@ -81,6 +79,7 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_count);
+        System.out.println("starting activity");
 
         player = Player.getPlayer(this);
         textView = (TextView)findViewById(R.id.textview);
@@ -90,7 +89,6 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
         mLevelUpButton = (Button)findViewById(R.id.button);
         mStatChart = (BarChart)findViewById(R.id.chart);
         setmStatChart();
-
         mLevelUpButton.setVisibility(View.INVISIBLE);
         mLevelUpButton.setClickable(false);
 
@@ -109,6 +107,7 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
         */
         levelText.setText("LVL: " + player.getLevel());
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

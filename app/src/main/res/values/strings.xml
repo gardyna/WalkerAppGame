@@ -13,4 +13,19 @@
          android.hardware.sensor.stepdetector
    </string>
     <string name="title_activity_levelup">Levelup</string>
+<<<<<<< HEAD
+    <string name="title_activity_rope_pull">RopePull</string>
+    <string name="title_activity_chat">ChatActivity</string>
+    <string name="title_activity_warp_test">WarpTest</string>
+    <string name="userName">TestUser</string>
+    <string name="Description">Appwarpdesc</string>
+    <string name="connectToAppwarp">Connect</string>
+    <string name="say">say something</string>
+    <string name="send">Send</string>
+=======
+    <string name="title_activity_login">LoginActivity</string>
+
+    <string name="text_btn_login">Login</string>
+    <string name="text_btn_register">Register</string>
+>>>>>>> origin/master
 </resources>
