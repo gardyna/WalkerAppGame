@@ -39,6 +39,8 @@
         <activity
             android:name=".ChatActivity"
             android:label="@string/title_activity_chat" >
+        </activity>
+        <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
