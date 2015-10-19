@@ -21,7 +21,7 @@
         android:text="Please login"/>
 
     <EditText
-        android:id="@+id/username"
+        android:id="@+id/editusername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -34,7 +34,7 @@
         android:layout_below="@+id/text_please_login"/>
 
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/editpassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -44,7 +44,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="30dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_below="@id/username"/>
+        android:layout_below="@id/editusername"/>
 
 
     <Button
@@ -53,9 +53,10 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:background="@drawable/button_login_shape"
-        android:layout_below="@id/password"
+        android:layout_below="@id/editpassword"
         android:layout_marginBottom="20dp"
-        android:text="@string/text_btn_login"/>
+        android:text="@string/text_btn_login"
+        android:onClick="UserLogin"/>
 
     <Button
         android:id="@+id/btn_signup"

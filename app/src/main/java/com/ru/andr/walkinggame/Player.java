@@ -2,21 +2,14 @@ package com.ru.andr.walkinggame;
 
 //TODO: save player info online
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 
 public class Player {
-    //region valueKeys
-    private static final String strKey = "mySTR";
-    private static final String spdKey = "mySPD";
-    private static final String intKey = "myINT";
-    private static final String aglKey = "myAGL";
-    private static final String expKey = "myEXP";
-    private static final String nextExpKey = "myExpToLevel";
-    private static final String levelKey = "myLevel";
-    private static final String timesCanLeveKey = "myTimesCanLevel";
-    private static final String PREFS_FILE = "myPrefs";
-    //endregion
+    private String name;
+    private boolean status;
 
     private int mEXP;
     private int level;
@@ -119,36 +112,65 @@ public class Player {
     }
 
     public void Save(){
-        SharedPreferences.Editor sp = mContext.getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor sp = mContext.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).edit();
         // leveling info
-        sp.putInt(expKey, mEXP);
-        sp.putInt(timesCanLeveKey, canLevelUpTimes);
-        sp.putFloat(nextExpKey, toNextLevel);
-        sp.putInt(levelKey, level);
+        sp.putInt(Constants.expKey, mEXP);
+        sp.putInt(Constants.timesCanLeveKey, canLevelUpTimes);
+        sp.putFloat(Constants.nextExpKey, toNextLevel);
+        sp.putInt(Constants.levelKey, level);
         // stats
-        sp.putInt(strKey, STR);
-        sp.putInt(spdKey, SPD);
-        sp.putInt(intKey, INT);
-        sp.putInt(aglKey, AGL);
+        sp.putInt(Constants.strKey, STR);
+        sp.putInt(Constants.intKey, SPD);
+        sp.putInt(Constants.intKey, INT);
+        sp.putInt(Constants.aglKey, AGL);
         // save
         sp.apply();
     }
 
     public static Player getPlayer(Context c){
         Player p = new Player(c);
-        SharedPreferences sp = c.getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
+        SharedPreferences sp = c.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE);
+        AccountManager manager = (AccountManager) c.getSystemService(c.ACCOUNT_SERVICE);
+        for (Account a: manager.getAccounts()) {
+            if (a.type.equalsIgnoreCase("com.google")){
+                p.name = a.name;
+                break;
+            }
+        }
+        if (p.name == null){
+            p.name = "Joe/Jane";
+        }
+
         // TODO: set all default to 1 when development is finished
         // stats
-        p.STR               = sp.getInt(strKey, 3);
-        p.SPD               = sp.getInt(spdKey, 2);
-        p.INT               = sp.getInt(intKey, 3);
-        p.AGL               = sp.getInt(aglKey, 1);
+        p.STR               = sp.getInt(Constants.strKey, 3);
+        p.SPD               = sp.getInt(Constants.spdKey, 2);
+        p.INT               = sp.getInt(Constants.intKey, 3);
+        p.AGL               = sp.getInt(Constants.aglKey, 1);
         // leveling info
-        p.canLevelUpTimes   = sp.getInt(timesCanLeveKey, 0);
-        p.level             = sp.getInt(levelKey, 1);
-        p.mEXP              = sp.getInt(expKey, 0);
-        p.toNextLevel       = sp.getFloat(nextExpKey, 10);
+        p.canLevelUpTimes   = sp.getInt(Constants.timesCanLeveKey, 0);
+        p.level             = sp.getInt(Constants.levelKey, 1);
+        p.mEXP              = sp.getInt(Constants.expKey, 0);
+        p.toNextLevel       = sp.getFloat(Constants.nextExpKey, 10);
 
         return p;
+    }
+
+    public Player(String name, boolean stat){
+        this.name = name;
+        this.status = stat;
+    }
+
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public boolean isStatusOnline() {
+        return status;
+    }
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

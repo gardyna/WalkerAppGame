@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WalkingGame</string>
+    <string name="app_name">Walker buddy</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -13,6 +13,14 @@
          android.hardware.sensor.stepdetector
    </string>
     <string name="title_activity_levelup">Levelup</string>
+    <string name="title_activity_rope_pull">RopePull</string>
+    <string name="title_activity_chat">ChatActivity</string>
+    <string name="title_activity_warp_test">WarpTest</string>
+    <string name="userName">TestUser</string>
+    <string name="Description">Appwarpdesc</string>
+    <string name="connectToAppwarp">Connect</string>
+    <string name="say">say something</string>
+    <string name="send">Send</string>
     <string name="title_activity_login">LoginActivity</string>
 
     <string name="text_btn_login">Login</string>
