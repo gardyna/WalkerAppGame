@@ -2,6 +2,7 @@ package com.ru.andr.walkinggame;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.media.Image;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,7 +11,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,10 +44,15 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
     private TextView outputView;
     private EditText inputEditText;
     private ScrollView outputScrollView;
+    private ImageView imageView;
     private UserListAdapter userListAdapter;
-    private ListView onlineUsersList;
     private Handler handler = new Handler();
     private ArrayList<Player> onlineUserList = new ArrayList<Player>();
+    private Player player;
+    private int myscore;
+    private int enemyscore;
+    private float startPos = 500;
+    private int winDiff = 50;
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -53,15 +61,18 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
         outputView = (TextView)findViewById(R.id.outputTextView);
         inputEditText = (EditText)findViewById(R.id.inputEditText);
         outputScrollView = (ScrollView)findViewById(R.id.outputScrollView);
-        onlineUsersList = (ListView)findViewById(R.id.onlineUserList);
-        onlineUsersList.setAdapter(userListAdapter);
+        imageView = (ImageView)findViewById(R.id.gameProgress);
+        imageView.setTranslationX(startPos);
+        player = Player.getPlayer(this);
+        myscore = 0;
+        enemyscore = 0;
 
         try{
             theClient = WarpClient.getInstance();
         }catch(Exception e){
             e.printStackTrace();
         }
-
+        runOnUiThread(update);
     }
 
     @Override
@@ -117,7 +128,10 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
 
     public void onSendClicked(View view){
         outputScrollView.fullScroll(ScrollView.FOCUS_DOWN);
-        theClient.sendChat(inputEditText.getText().toString());
+        int val = player.getStrength();
+        myscore += val;
+        theClient.sendChat(String.valueOf(val));
+        runOnUiThread(update);
     }
 
     @Override
@@ -133,6 +147,7 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
 
         if(event.getResult()== WarpResponseResultCode.SUCCESS){
             onlineUserList.clear();
+            if (event.getJoinedUsers() == null){return;}
             if(event.getJoinedUsers().length>1){// if more than one user is online
                 final String onlineUser[] = Utils.removeLocalUserNameFromArray(event.getJoinedUsers());
                 for(int i=0;i<onlineUser.length;i++){
@@ -145,7 +160,7 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
                 showToastOnUIThread("No online user found");
             }
         }else{
-            showToastOnUIThread("onGetLiveRoomInfoDone Failed with ErrorCode: "+event.getResult());
+            showToastOnUIThread("onGetLiveRoomInfoDone Failed with ErrorCode: " + event.getResult());
         }
     }
 
@@ -153,16 +168,16 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(onlineUserList.size()>0){
+                if (onlineUserList.size() > 0) {
                     userListAdapter.setData(onlineUserList);
-                }else{
+                } else {
                     userListAdapter.clear();
                 }
             }
         });
 
     }
-
+    // region room managemengt empty methods
     @Override
     public void onJoinRoomDone(RoomEvent arg0) {
 
@@ -188,6 +203,7 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
     public void onUpdatePropertyDone(LiveRoomInfoEvent arg0) {
 
     }
+    // endregion
 
     @Override
     public void onChatReceived(final ChatEvent event) {
@@ -197,8 +213,28 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
                 outputView.append("\n"+event.getSender()+": "+event.getMessage());
             }
         });
+        if (event.getSender().compareTo(player.getName()) != 0){
+            enemyscore += Integer.parseInt(event.getMessage());
+        }
+        runOnUiThread(update);
+        int diff = myscore - enemyscore;
+        if (diff >= winDiff){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    outputView.append("\n you win");
+                }
+            });
+        }else if (diff <= -winDiff){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    outputView.append("\n opponent wins");
+                }
+            });
+        }
     }
-
+    // region empty inteface methods
     @Override
     public void onPrivateChatReceived(final String userName, final String message) {
 
@@ -225,16 +261,48 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
     }
 
     @Override
-    public void onUserJoinedRoom(final RoomData roomData, final String userName) {
-        if(userName.equals(Utils.USER_NAME)==false){
-            onlineUserList.add(new Player(userName, true));
-            resetAdapter();
-        }
+    public void onUserLeftLobby(LobbyData arg0, String arg1) {
+
     }
 
     @Override
-    public void onUserLeftLobby(LobbyData arg0, String arg1) {
+    public void onMoveCompleted(MoveEvent arg0) {
 
+    }
+
+    @Override
+    public void onLockPropertiesDone(byte arg0) {
+
+    }
+    @Override
+    public void onUnlockPropertiesDone(byte arg0) {
+
+    }
+
+    @Override
+    public void onDisconnectDone(ConnectEvent arg0) {
+
+    }
+
+    @Override
+    public void onInitUDPDone(byte result) {
+
+    }
+
+    @Override
+    public void onSendPrivateChatDone(byte result) {
+
+
+    }
+
+    // endregion
+
+    @Override
+    public void onUserJoinedRoom(final RoomData roomData, final String userName) {
+        if(!userName.equals(Utils.USER_NAME)){
+            onlineUserList.add(new Player(userName, true));
+            resetAdapter();
+        }
     }
 
     @Override
@@ -247,13 +315,6 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
         }
         resetAdapter();
     }
-
-    @Override
-    public void onMoveCompleted(MoveEvent arg0) {
-
-    }
-
-
 
     @Override
     public void onUserPaused(String locid, boolean isLobby, String userName) {
@@ -277,14 +338,7 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
         resetAdapter();
     }
 
-    @Override
-    public void onLockPropertiesDone(byte arg0) {
 
-    }
-    @Override
-    public void onUnlockPropertiesDone(byte arg0) {
-
-    }
     @Override
     public void onConnectDone(final ConnectEvent event) {
         if(progressDialog!=null){
@@ -336,15 +390,7 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
         }
 
     }
-    @Override
-    public void onDisconnectDone(ConnectEvent arg0) {
 
-    }
-
-    @Override
-    public void onInitUDPDone(byte result) {
-
-    }
 
     @Override
     public void onSendChatDone(byte result) {
@@ -353,11 +399,7 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
         }
     }
 
-    @Override
-    public void onSendPrivateChatDone(byte result) {
 
-
-    }
 
     private void showToastOnUIThread(final String message){
         runOnUiThread(new Runnable() {
@@ -368,6 +410,18 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
         });
     }
 
+    private Runnable update = new Runnable() {
+        @Override
+        public void run() {
+            TextView mytext = (TextView)findViewById(R.id.myscore);
+            TextView enemy = (TextView)findViewById(R.id.oponentcore);
+            mytext.setText("myScore: " + String.valueOf(myscore));
+            imageView.setTranslationX(startPos + (enemyscore - myscore)*10);
+            enemy.setText("oponentScore: " + String.valueOf(enemyscore));
+        }
+    };
+
+    // region autogenerated stubs
     @Override
     public void onGameStarted(String arg0, String arg1, String arg2) {
         // TODO Auto-generated method stub
@@ -399,5 +453,5 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
 
     }
 
-
+    // endregion
 }

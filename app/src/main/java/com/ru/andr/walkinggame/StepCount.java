@@ -197,4 +197,9 @@ public class StepCount extends AppCompatActivity implements SensorEventListener 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
+    public void PlayGame(View v){
+        Intent i = new Intent(this, WarpTest.class);
+        startActivity(i);
+    }
 }

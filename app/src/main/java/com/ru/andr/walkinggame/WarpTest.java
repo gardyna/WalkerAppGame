@@ -12,14 +12,19 @@ import android.widget.Toast;
 
 import com.shephertz.app42.gaming.multiplayer.client.WarpClient;
 import com.shephertz.app42.gaming.multiplayer.client.command.WarpResponseResultCode;
+import com.shephertz.app42.gaming.multiplayer.client.events.AllRoomsEvent;
+import com.shephertz.app42.gaming.multiplayer.client.events.AllUsersEvent;
 import com.shephertz.app42.gaming.multiplayer.client.events.ConnectEvent;
 import com.shephertz.app42.gaming.multiplayer.client.events.LiveRoomInfoEvent;
+import com.shephertz.app42.gaming.multiplayer.client.events.LiveUserInfoEvent;
+import com.shephertz.app42.gaming.multiplayer.client.events.MatchedRoomsEvent;
 import com.shephertz.app42.gaming.multiplayer.client.events.RoomEvent;
 import com.shephertz.app42.gaming.multiplayer.client.listener.ConnectionRequestListener;
 import com.shephertz.app42.gaming.multiplayer.client.listener.RoomRequestListener;
+import com.shephertz.app42.gaming.multiplayer.client.listener.ZoneRequestListener;
 
 
-public class WarpTest extends AppCompatActivity implements ConnectionRequestListener, RoomRequestListener {
+public class WarpTest extends AppCompatActivity implements ConnectionRequestListener, RoomRequestListener, ZoneRequestListener {
     private WarpClient theClient;
     private ProgressDialog progressDialog;
     private Handler handler = new Handler();
@@ -37,6 +42,7 @@ public class WarpTest extends AppCompatActivity implements ConnectionRequestList
         super.onStart();
         theClient.addConnectionRequestListener(this);
         theClient.addRoomRequestListener(this);
+        theClient.addZoneRequestListener(this);
     }
 
     @Override
@@ -44,6 +50,7 @@ public class WarpTest extends AppCompatActivity implements ConnectionRequestList
         super.onStop();
         theClient.removeConnectionRequestListener(this);
         theClient.removeRoomRequestListener(this);
+        theClient.removeZoneRequestListener(this);
     }
 
     @Override
@@ -89,7 +96,8 @@ public class WarpTest extends AppCompatActivity implements ConnectionRequestList
         }
         if(event.getResult() == WarpResponseResultCode.SUCCESS){
             showToastOnUIThread("Connection success");
-            theClient.joinRoom(Constants.roomId);
+            theClient.createRoom("myRoom" + Player.getPlayer(this).getName(), Player.getPlayer(this).getName(), 2, null);
+            //theClient.joinRoom(Constants.roomId);
         }
         else if(event.getResult() == WarpResponseResultCode.SUCCESS_RECOVERED){
             showToastOnUIThread("Connection recovered");
@@ -215,6 +223,43 @@ public class WarpTest extends AppCompatActivity implements ConnectionRequestList
 
     @Override
     public void onInitUDPDone(byte b) {
+
+    }
+
+    @Override
+    public void onDeleteRoomDone(RoomEvent roomEvent) {
+
+    }
+
+    @Override
+    public void onGetAllRoomsDone(AllRoomsEvent allRoomsEvent) {
+
+    }
+
+    @Override
+    public void onCreateRoomDone(RoomEvent roomEvent) {
+        //Utils.showToast(this, "Room created, attempting to join");
+        theClient.joinRoom(roomEvent.getData().getId());
+        //theClient.subscribeRoom(roomEvent.getData().getId());
+    }
+
+    @Override
+    public void onGetOnlineUsersDone(AllUsersEvent allUsersEvent) {
+
+    }
+
+    @Override
+    public void onGetLiveUserInfoDone(LiveUserInfoEvent liveUserInfoEvent) {
+
+    }
+
+    @Override
+    public void onSetCustomUserDataDone(LiveUserInfoEvent liveUserInfoEvent) {
+
+    }
+
+    @Override
+    public void onGetMatchedRoomsDone(MatchedRoomsEvent matchedRoomsEvent) {
 
     }
 

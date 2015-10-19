@@ -38,7 +38,7 @@
         android:id="@+id/chart"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_below="@+id/progressBar"
+        android:layout_below="@+id/imageView"
         android:layout_alignParentStart="true"
         android:layout_alignEnd="@+id/progressBar" />
 
@@ -50,6 +50,24 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:onClick="StartLevelUp"/>
+
+    <ImageView
+        android:src="@drawable/lord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_below="@+id/progressBar"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Play game"
+        android:id="@+id/gameButton"
+        android:onClick="PlayGame"
+        android:layout_above="@+id/progressBar"
+        android:layout_toStartOf="@+id/button" />
 
 
 </RelativeLayout>
