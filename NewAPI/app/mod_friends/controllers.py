@@ -18,6 +18,7 @@ from app.mod_friends.models import Friends
 mod_friends = Blueprint('friends', __name__, url_prefix='/friends')
 
 @mod_friends.route("/", methods=['GET'])
+@login_required
 def getMyFriends():
 	return return_response(200, "OK")
 
