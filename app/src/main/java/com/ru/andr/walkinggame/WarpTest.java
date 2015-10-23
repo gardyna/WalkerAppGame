@@ -96,8 +96,8 @@ public class WarpTest extends AppCompatActivity implements ConnectionRequestList
         }
         if(event.getResult() == WarpResponseResultCode.SUCCESS){
             showToastOnUIThread("Connection success");
-            theClient.createRoom("myRoom" + Player.getPlayer(this).getName(), Player.getPlayer(this).getName(), 2, null);
-            //theClient.joinRoom(Constants.roomId);
+            theClient.createRoom("myRoom2", Player.getPlayer(this).getName(), 2, null);
+            //theClient.joinRoom("myRoom2");
         }
         else if(event.getResult() == WarpResponseResultCode.SUCCESS_RECOVERED){
             showToastOnUIThread("Connection recovered");
@@ -128,6 +128,7 @@ public class WarpTest extends AppCompatActivity implements ConnectionRequestList
     public void onJoinRoomDone(RoomEvent event) {
         if(event.getResult()==WarpResponseResultCode.SUCCESS){
             theClient.subscribeRoom(event.getData().getId());
+
         }else{
             showToastOnUIThread("onJoinRoomDone with ErrorCode: "+event.getResult());
         }

@@ -2,11 +2,13 @@ package com.ru.andr.walkinggame;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.graphics.Point;
 import android.media.Image;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,7 +44,6 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
     private ProgressDialog progressDialog;
     private WarpClient theClient;
     private TextView outputView;
-    private EditText inputEditText;
     private ScrollView outputScrollView;
     private ImageView imageView;
     private UserListAdapter userListAdapter;
@@ -51,17 +52,23 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
     private Player player;
     private int myscore;
     private int enemyscore;
-    private float startPos = 500;
+    private float startPos;
+    private int stepSize;
     private int winDiff = 50;
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
         userListAdapter = new UserListAdapter(this);
         setContentView(R.layout.activity_chat);
         outputView = (TextView)findViewById(R.id.outputTextView);
-        inputEditText = (EditText)findViewById(R.id.inputEditText);
         outputScrollView = (ScrollView)findViewById(R.id.outputScrollView);
         imageView = (ImageView)findViewById(R.id.gameProgress);
+        Point mPointT = new Point();
+        Display d = getWindowManager().getDefaultDisplay();
+        d.getSize(mPointT);
+        startPos = (mPointT.x / 2) - 50;
+        stepSize = mPointT.x / 100;
         imageView.setTranslationX(startPos);
         player = Player.getPlayer(this);
         myscore = 0;
@@ -388,14 +395,13 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
             handleLeaveRoom();
             this.finish();
         }
-
     }
 
 
     @Override
     public void onSendChatDone(byte result) {
         if(result!=WarpResponseResultCode.SUCCESS){
-            showToastOnUIThread("onSendChatDone Failed with ErrorCode: "+result);
+            showToastOnUIThread("onSendChatDone Failed with ErrorCode: " + result);
         }
     }
 
@@ -416,7 +422,7 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
             TextView mytext = (TextView)findViewById(R.id.myscore);
             TextView enemy = (TextView)findViewById(R.id.oponentcore);
             mytext.setText("myScore: " + String.valueOf(myscore));
-            imageView.setTranslationX(startPos + (enemyscore - myscore)*10);
+            imageView.setTranslationX(startPos + (enemyscore - myscore)*stepSize);
             enemy.setText("oponentScore: " + String.valueOf(enemyscore));
         }
     };

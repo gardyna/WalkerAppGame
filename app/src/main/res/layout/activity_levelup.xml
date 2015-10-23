@@ -73,7 +73,7 @@
 
     <TextView
         android:id="@+id/IntelligenceText"
-        android:text="Speed: ??"
+        android:text="Intelligence: ??"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/IntelligenceButton"

@@ -20,7 +20,7 @@
     <string name="Description">Appwarpdesc</string>
     <string name="connectToAppwarp">Connect</string>
     <string name="say">say something</string>
-    <string name="send">Send</string>
+    <string name="send">Pull</string>
     <string name="title_activity_login">LoginActivity</string>
 
     <string name="text_btn_login">Login</string>
