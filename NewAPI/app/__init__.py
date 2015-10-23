@@ -67,7 +67,7 @@ def per_request_callbacks(response):
 
 # Special repsonse for all responses
 def return_response(status, message="", result={}):
-    response = {"meta": {"status":status,"message":message},"result":result}
+    response = {"meta": {"status":status,"message":message},"content":result}
     response = jsonify(response)
     return response, status
 

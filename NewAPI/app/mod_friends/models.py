@@ -15,11 +15,12 @@ class Friends(db.Model):
     Represent a friends in database
     """
     id = db.Column(db.Integer, primary_key=True)
-    userId= db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    friendId= db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    userId= db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, index=True)
+    friendId= db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, index=True)
 
-    friends1 = db.Index("Friends1", "userId", "friendId", unique=True)
-    friends2 = db.Index("Friends2", "friendId", "userId", unique=True)
+    # Two indexes so we can search friendship easily
+    __table_args__ = (Index('friends1', "userId", "friendId"), 
+        Index('friends2', "friendId", "userId"), )
 
     def __init__(self, userId, friendId):
         self.userId = userId
