@@ -22,7 +22,7 @@
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_gravity="left"
+            android:layout_gravity="center_horizontal"
             android:id="@+id/gameProgress"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"

@@ -58,13 +58,17 @@ public class LoginActivity extends AppCompatActivity {
         EditText inputPassword = (EditText) findViewById(R.id.editpassword);
         loginUser.username = inputUsername.getText().toString();
         loginUser.password = inputPassword.getText().toString();
+        loginUser.email = "";
 
-        Call<String> contentCall = mAdapter.testLoginApi(loginUser);
-        try {
-            String crap = contentCall.execute().body();
-            Log.d("Classss", crap.toString());
-        } catch(Exception e) {
-            //e.printStackTrace();
+        Call<Result> mCall = mAdapter.getToken(loginUser.username);
+
+        try{
+            boolean crap = mCall.execute().isSuccess();
+            Log.d("Classss", ""+crap);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
         }
     }
 }

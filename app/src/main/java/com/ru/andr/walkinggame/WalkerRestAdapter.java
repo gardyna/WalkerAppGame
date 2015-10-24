@@ -18,7 +18,7 @@ public class WalkerRestAdapter {
     protected Retrofit retrofit;
     protected WalkerAPIService mApi;
 
-    static final String API_URL = "http://127.0.0.1:8080";
+    static final String API_URL = "http://188.166.85.204:8080";
 
     public WalkerRestAdapter()
     {
@@ -37,5 +37,10 @@ public class WalkerRestAdapter {
         Log.d("Classsss", userdata.username);
         Log.d(TAG, "testLoginApi: for user:" + userdata.username);
         return mApi.basicLogin(userdata);
+    }
+
+    public Call<Result> getToken(String username)
+    {
+        return mApi.getToken(username);
     }
 }
