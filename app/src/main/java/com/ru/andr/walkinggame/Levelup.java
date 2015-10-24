@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 public class Levelup extends AppCompatActivity {
     TextView canLevelText;
 
@@ -19,6 +21,7 @@ public class Levelup extends AppCompatActivity {
         canLevelText = (TextView)findViewById(R.id.LevelTimes);
 
         canLevelText.setText("You can level " + player.getCanLevelUpTimes() + " times");
+        textUpdate();
     }
 
     @Override
@@ -43,6 +46,14 @@ public class Levelup extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void textUpdate(){
+        Player player = Player.getPlayer(this);
+        ((TextView) findViewById(R.id.strengthText)).setText("Strength: " + player.getStrength());
+        ((TextView) findViewById(R.id.speedText)).setText("Speed: " + player.getSpeed());
+        ((TextView) findViewById(R.id.IntelligenceText)).setText("Inteligence: " + player.getInteligence());
+        ((TextView) findViewById(R.id.AgilityText)).setText("Inteligence: " + player.getAgility());
+    }
+
     public void IncStat(View v){
         Player player = Player.getPlayer(this);
         // stat increase
@@ -64,6 +75,7 @@ public class Levelup extends AppCompatActivity {
         player.Save();
         canLevelText.setText("You can level " + player.getCanLevelUpTimes() + " times");
         checkGoBack();
+        textUpdate();
     }
 
 
