@@ -1,32 +1,35 @@
 package com.ru.andr.walkinggame;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
+
+import com.ru.andr.walkinggame.api.RestInterface;
+import com.ru.andr.walkinggame.model.Result;
+import com.ru.andr.walkinggame.model.User;
+import com.squareup.okhttp.OkHttpClient;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 
 import retrofit.Call;
 import retrofit.Callback;
+import retrofit.JacksonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private WalkerRestAdapter mAdapter;
-    private WalkerAPIService api;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        mAdapter = new WalkerRestAdapter();
 
     }
 
@@ -53,22 +56,51 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void UserLogin(View view) {
-        User loginUser = new User();
+        final User loginUser = new User();
         EditText inputUsername = (EditText) findViewById(R.id.editusername);
         EditText inputPassword = (EditText) findViewById(R.id.editpassword);
         loginUser.username = inputUsername.getText().toString();
         loginUser.password = inputPassword.getText().toString();
-        loginUser.email = "";
 
-        Call<Result> mCall = mAdapter.getToken(loginUser.username);
+        Thread fetchData = new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-        try{
-            boolean crap = mCall.execute().isSuccess();
-            Log.d("Classss", ""+crap);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
+                OkHttpClient client = new OkHttpClient();
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("http://192.168.1.68:8080")
+                        .client(client)
+                        .addConverterFactory(JacksonConverterFactory.create())
+                        .build();
+
+                RestInterface mApi = retrofit.create(RestInterface.class);
+
+
+                try {
+                    Call<Result> call = mApi.userLogin(loginUser);
+                    Response<Result> rr = call.execute();
+                    if(rr.body() != null)
+                    {
+                        String token = rr.body().content.get("token");
+                        if(token != null || !token.isEmpty())
+                        {
+
+                        }
+                    }
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        fetchData.start();
+    }
+
+    public void registerClicked(View view) {
+        Intent newIntern = new Intent(this, RegisterActivity.class);
+        this.startActivity(newIntern);
     }
 }

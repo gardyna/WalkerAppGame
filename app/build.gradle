@@ -30,16 +30,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java', 'src/main/java/com/ru/andr/walkinggame/service', 'src/main/java/com/ru/andr/walkinggame/type']
+        }
+    }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile files('libs/mpandroidchartlibrary-2-1-4.jar')
+    compile files('libs/App42MultiPlayerGamingSDK.jar')
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
     compile 'com.squareup.okhttp:okhttp:2.5.0'
-    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
     compile 'com.squareup.retrofit:converter-jackson:2.0.0-beta2'
-    compile files('libs/App42MultiPlayerGamingSDK.jar')
 }
 

@@ -14,6 +14,7 @@ mod_index = Blueprint('index', __name__, url_prefix='/')
 
 @mod_index.route("login/", methods=['POST'])
 def login():
+	print request.json
 	username = request.json.get("username")
 	password = request.json.get("password")
 
@@ -37,17 +38,20 @@ def new_user():
 
 	print username,email,password
 	if username is "" or email is "" or password is "":
-		return jsonify({'result':'missing'}), 400
+		return return_response(400, "Missing properties")
+
+	if username is None or email is None or password is None:
+		return return_response(400, "Missing properties")
 
 	alreadyRegisterd = User.query.filter_by(username = username).first()
 
 	if alreadyRegisterd is not None:
-		return jsonify({'result':'exist'}), 400
+		return return_response(400, "User exist")
 
 	newUser = User(username, email, password)
 	db.session.add(newUser)
 	db.session.commit()
 
 	# Return that the user was created but he
-	return jsonify({'result':'created'}), 201
+	return return_response(201, "OK", {'result':'User created'})
 
