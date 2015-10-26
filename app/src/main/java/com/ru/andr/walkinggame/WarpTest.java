@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.shephertz.app42.gaming.multiplayer.client.WarpClient;
@@ -23,11 +25,27 @@ import com.shephertz.app42.gaming.multiplayer.client.listener.ConnectionRequestL
 import com.shephertz.app42.gaming.multiplayer.client.listener.RoomRequestListener;
 import com.shephertz.app42.gaming.multiplayer.client.listener.ZoneRequestListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit.Call;
+
 
 public class WarpTest extends AppCompatActivity implements ConnectionRequestListener, RoomRequestListener, ZoneRequestListener {
     private WarpClient theClient;
     private ProgressDialog progressDialog;
     private Handler handler = new Handler();
+    private Spinner friendsList;
+
+    private void populateFriendsList(){
+        List<String> list = new ArrayList<>();
+        list.add("Dagur");
+        list.add("Dabs");
+        list.add("FOO");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, list);
+        friendsList.setAdapter(dataAdapter);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +92,8 @@ public class WarpTest extends AppCompatActivity implements ConnectionRequestList
     }
 
     private void init() {
+        friendsList = (Spinner)findViewById(R.id.friends_list);
+        populateFriendsList();
         WarpClient.initialize(Constants.publicAPIkey, Constants.secretAPIkey);
         WarpClient.setRecoveryAllowance(120);
         try{

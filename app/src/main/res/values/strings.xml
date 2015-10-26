@@ -26,4 +26,9 @@
     <string name="text_btn_login">Login</string>
     <string name="text_btn_register">Register</string>
     <string name="title_activity_register">RegisterActivity</string>
+
+    <string-array name="game_modes">
+        <item>Rope pull</item>
+        <item>NULL</item>
+    </string-array>
 </resources>
