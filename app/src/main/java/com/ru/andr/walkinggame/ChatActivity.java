@@ -1,10 +1,14 @@
 package com.ru.andr.walkinggame;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -225,6 +229,8 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
                     outputView.append("\n you win");
                 }
             });
+            GameOverDialog d = new GameOverDialog("you win");
+            d.show(this.getFragmentManager(), null);
         }else if (diff <= -winDiff){
             runOnUiThread(new Runnable() {
                 @Override
