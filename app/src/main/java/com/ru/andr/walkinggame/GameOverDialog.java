@@ -21,14 +21,13 @@ public class GameOverDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(msg)
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent i = new Intent(getActivity(), StepCount.class);
-                        startActivity(i);
-                    }
-                });
+        builder.setMessage(msg).setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent i = new Intent(getActivity(), StepCount.class);
+                startActivity(i);
+            }
+        });
         return builder.create();
     }
 }

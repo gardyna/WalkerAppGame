@@ -10,6 +10,8 @@ public class Utils {
 
     public static String USER_NAME = "";
 
+    public static String roomID = "";
+
     public static String[] removeLocalUserNameFromArray(String[] user){
         ArrayList<String> userList = new ArrayList<String>();
         for(int i=0;i<user.length;i++){

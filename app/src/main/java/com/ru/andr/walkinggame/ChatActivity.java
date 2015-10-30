@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +13,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -40,9 +42,8 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
 
     private ProgressDialog progressDialog;
     private WarpClient theClient;
-    private TextView outputView;
-    private ScrollView outputScrollView;
     private ImageView imageView;
+    private Button btn;
     private UserListAdapter userListAdapter;
     private Handler handler = new Handler();
     private ArrayList<Player> onlineUserList = new ArrayList<Player>();
@@ -55,16 +56,14 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-
+        btn = (Button)findViewById(R.id.sendBtn);
         userListAdapter = new UserListAdapter(this);
         setContentView(R.layout.activity_chat);
-        outputView = (TextView)findViewById(R.id.outputTextView);
-        outputScrollView = (ScrollView)findViewById(R.id.outputScrollView);
         imageView = (ImageView)findViewById(R.id.gameProgress);
         Point mPointT = new Point();
         Display d = getWindowManager().getDefaultDisplay();
         d.getSize(mPointT);
-        startPos = (mPointT.x / 2) - 50;
+        startPos = 0;
         stepSize = mPointT.x / 100;
         imageView.setTranslationX(startPos);
         player = Player.getPlayer(this);
@@ -124,14 +123,13 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
 
     private void handleLeaveRoom(){
         if(theClient!=null){
-            theClient.unsubscribeRoom(Constants.roomId);
-            theClient.leaveRoom(Constants.roomId);
+            theClient.unsubscribeRoom(Utils.roomID);
+            theClient.leaveRoom(Utils.roomID);
             theClient.disconnect();
         }
     }
 
     public void onSendClicked(View view){
-        outputScrollView.fullScroll(ScrollView.FOCUS_DOWN);
         int val = player.getStrength();
         myscore += val;
         theClient.sendChat(String.valueOf(val));
@@ -211,33 +209,22 @@ public class ChatActivity extends Activity implements RoomRequestListener, Notif
 
     @Override
     public void onChatReceived(final ChatEvent event) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                outputView.append("\n"+event.getSender()+": "+event.getMessage());
-            }
-        });
         if (event.getSender().compareTo(player.getName()) != 0){
             enemyscore += Integer.parseInt(event.getMessage());
         }
         runOnUiThread(update);
         int diff = myscore - enemyscore;
         if (diff >= winDiff){
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    outputView.append("\n you win");
-                }
-            });
-            GameOverDialog d = new GameOverDialog("you win");
+            handleLeaveRoom();
+            //btn.setEnabled(false);
+            GameOverDialog d = new GameOverDialog("you win :) ");
             d.show(this.getFragmentManager(), null);
         }else if (diff <= -winDiff){
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    outputView.append("\n opponent wins");
-                }
-            });
+            handleLeaveRoom();
+            //btn.setEnabled(false);
+            GameOverDialog d = new GameOverDialog("You lost :( ");
+            d.show(this.getFragmentManager(), null);
+
         }
     }
     // region empty inteface methods

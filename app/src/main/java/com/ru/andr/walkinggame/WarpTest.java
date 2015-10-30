@@ -12,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.ru.andr.walkinggame.api.RestInterface;
+import com.ru.andr.walkinggame.model.Result;
 import com.shephertz.app42.gaming.multiplayer.client.WarpClient;
 import com.shephertz.app42.gaming.multiplayer.client.command.WarpResponseResultCode;
 import com.shephertz.app42.gaming.multiplayer.client.events.AllRoomsEvent;
@@ -24,11 +26,19 @@ import com.shephertz.app42.gaming.multiplayer.client.events.RoomEvent;
 import com.shephertz.app42.gaming.multiplayer.client.listener.ConnectionRequestListener;
 import com.shephertz.app42.gaming.multiplayer.client.listener.RoomRequestListener;
 import com.shephertz.app42.gaming.multiplayer.client.listener.ZoneRequestListener;
+import com.squareup.okhttp.OkHttpClient;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Call;
+import retrofit.Callback;
+import retrofit.JacksonConverterFactory;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 
 public class WarpTest extends AppCompatActivity implements ConnectionRequestListener, RoomRequestListener, ZoneRequestListener {
@@ -147,6 +157,7 @@ public class WarpTest extends AppCompatActivity implements ConnectionRequestList
     @Override
     public void onJoinRoomDone(RoomEvent event) {
         if(event.getResult()==WarpResponseResultCode.SUCCESS){
+            Utils.roomID = event.getData().getId();
             theClient.subscribeRoom(event.getData().getId());
 
         }else{
